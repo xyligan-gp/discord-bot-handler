@@ -54,4 +54,11 @@ export class UtilService {
 
 		return values;
 	}
+
+	/**
+	 * 📌 Registering custom emojis for the bot (https://discord.com/developers/applications/YOUR_BOT_ID/emojis).
+	 */
+	public registerEmojis(...emojis: Record<string, string>[]): void {
+		this.bot.customEmojis = Object.assign({}, this.bot.customEmojis, ...emojis);
+	}
 }
