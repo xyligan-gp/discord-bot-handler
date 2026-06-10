@@ -1,0 +1,8 @@
+{
+	"COMMANDS": {
+		"PING": {
+			"PROCESS": "🏓 Pinging...",
+			"RESPONSE": "🏓 **Pong!**\nAPI latency: `{1}` ms.\nWebSocket latency: `{2}` ms."
+		}
+	}
+}
