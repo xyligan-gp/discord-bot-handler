@@ -3,7 +3,13 @@ import { Bot } from '../../app.class';
 import { BotEvent } from '../event.class';
 
 // Import requirements
-import { CacheType, Events, Interaction } from 'discord.js';
+import {
+	CacheType,
+	Collection,
+	EmbedBuilder,
+	Events,
+	Interaction,
+} from 'discord.js';
 
 export default class InteractionCreateEvent extends BotEvent {
 	constructor(bot: Bot) {
@@ -38,17 +44,60 @@ export default class InteractionCreateEvent extends BotEvent {
 			}
 
 			if (interaction.isChatInputCommand()) {
-				const cName = interaction.commandName;
-				const botCmd = this.bot.commands.get(cName);
+				const q = interaction.commandName;
+				const cmd = this.bot.commands.get(q);
 
-				if (botCmd) {
+				if (cmd) {
 					this.bot.logger.info(
 						`[Command] User '${interaction.user.username}' (ID: ${
 							interaction.user.id
-						}) used '${botCmd.meta.name}'!`,
+						}) used '${cmd.meta.name}'!`,
 					);
 
-					await botCmd.handle(interaction);
+					if (!this.bot.cooldowns.has(cmd.meta.name)) {
+						this.bot.cooldowns.set(cmd.meta.name, new Collection());
+					}
+
+					const now = Date.now();
+					const timestamps = this.bot.cooldowns.get(cmd.meta.name);
+					const cooldownAmount = cmd.cooldown * 1_000;
+
+					if (timestamps.has(interaction.user.id)) {
+						const expirationTime =
+							timestamps.get(interaction.user.id) + cooldownAmount;
+
+						if (now < expirationTime) {
+							const expiredTimestamp = Math.round(expirationTime / 1_000);
+
+							await interaction.reply({
+								embeds: [
+									new EmbedBuilder()
+										.setColor('DarkRed')
+										.setDescription(
+											interaction.t(
+												'DEFAULT.CMD_IS_COOLDOWNED',
+												cmd.meta.name,
+												`<t:${expiredTimestamp}:R>`,
+											),
+										),
+								],
+
+								flags: 'Ephemeral',
+							});
+
+							return;
+						}
+					}
+
+					await cmd.handle(interaction);
+
+					timestamps.set(interaction.user.id, now);
+
+					setTimeout(
+						() => timestamps.delete(interaction.user.id),
+						cooldownAmount,
+					);
+
 					return;
 				}
 			}

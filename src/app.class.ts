@@ -18,6 +18,7 @@ export class Bot extends Client<true> {
 
 	public commands: Collection<string, BotCommand>;
 	public components: Collection<string, BotComponent>;
+	public cooldowns: Collection<string, Collection<string, number>>;
 
 	public customEmojis: Record<string, string>;
 
@@ -34,6 +35,7 @@ export class Bot extends Client<true> {
 
 		this.commands = new Collection();
 		this.components = new Collection();
+		this.cooldowns = new Collection();
 
 		this.customEmojis = {};
 	}

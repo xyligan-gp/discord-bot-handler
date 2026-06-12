@@ -11,7 +11,8 @@ import {
 export abstract class BotCommand {
 	constructor(public bot: Bot) {}
 
-	meta: SlashCommandBuilder;
+	public cooldown: number;
+	public meta: SlashCommandBuilder;
 
 	abstract handle(
 		interaction: ChatInputCommandInteraction<CacheType>,

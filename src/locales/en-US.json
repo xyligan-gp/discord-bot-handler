@@ -1,4 +1,8 @@
 {
+	"DEFAULT": {
+		"CMD_IS_COOLDOWNED": "{E} Please wait, you are on a cooldown for `{1}`. You can use it again {2}."
+	},
+
 	"COMMANDS": {
 		"PING": {
 			"PROCESS": "🏓 Pinging...",

@@ -25,6 +25,12 @@ export default class ReadyEvent extends BotEvent {
 			}
 
 			this.bot.i18n.loadTranslations();
+			this.bot.i18n.registerPartials(
+				{ id: '{E}', value: '❌' },
+				{ id: '{S}', value: '✅' },
+				{ id: '{I}', value: '📌' },
+				{ id: '{W}', value: '⏰' },
+			);
 
 			this.bot.logger.info(`🟢 Client '${this.bot.user.username}' is ready!`);
 		} catch (e) {

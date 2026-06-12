@@ -14,6 +14,8 @@ export default class PingCmd extends BotCommand {
 	constructor(bot: Bot) {
 		super(bot);
 
+		this.cooldown = 30;
+
 		this.meta = new SlashCommandBuilder()
 			.setName('ping')
 			.setDescription('Bot latency.');
